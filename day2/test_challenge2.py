@@ -13,8 +13,8 @@ def test_is_valid_game_too_many_blue():
     assert is_valid_game(game) == False
 
 
-def test_get_data():
-    game_string = "Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green"
+def test_get_required_cubes():
+    game_string = "3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green"
     assert get_required_cubes(game_string) == {
         'red':4,
         'green':2,

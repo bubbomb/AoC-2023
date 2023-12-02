@@ -6,9 +6,8 @@ CUBES_IN_BAG = {
     'green': 13,
 }
 
-def is_valid_game(cube_draws_in_entire_game):
-
-    cube_draws = cube_draws_in_entire_game.split(';')
+def is_valid_game(draws):
+    cube_draws = draws.split(';')
     for cube_draw in cube_draws:
         for cubes_by_color in cube_draw.split(','):
             cubes_by_color = cubes_by_color.strip()
@@ -19,11 +18,10 @@ def is_valid_game(cube_draws_in_entire_game):
             total_cubes_in_bag_of_color = CUBES_IN_BAG.get(cube_color, 0)
             if total_cubes_in_bag_of_color < number_of_cubes_drawn_of_color:
                 return False
-
     return True
 
-def get_required_cubes(game_string):
-    draws_string = game_string.split(':')[1]
+
+def get_required_cubes(draws_string):
     required_cubes = {
         'red':0,
         'green':0,
@@ -55,22 +53,19 @@ if __name__ == "__main__":
     print(len(lines), 'lines')
     print()
 
-    print('calculating 1st puzzle...')
+    print('calculating puzzles...')
+
     first_puzzle_value = 0
+    second_puzzle_value = 0
     for line in lines:
         draws_string = line.split(':')[1]
         game_number = int(line.split(':')[0].split(' ')[1])
         if is_valid_game(draws_string):
             first_puzzle_value += game_number
 
-    print(first_puzzle_value)
-
-    print('calculating 2nd puzzle...')
-
-    second_puzzle_value = 0
-    for line in lines:
-        required_cubes = get_required_cubes(line)
+        required_cubes = get_required_cubes(draws_string)
         cubes_power = required_cubes['red'] * required_cubes['green'] * required_cubes['blue']
         second_puzzle_value += cubes_power
         
-    print(second_puzzle_value)
+    print('first puzzle:', first_puzzle_value)
+    print('second puzzle:', second_puzzle_value)
