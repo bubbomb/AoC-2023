@@ -1,4 +1,4 @@
-from challenge2 import is_valid_game, get_game_data
+from challenge2 import is_valid_game, get_required_cubes
 
 def test_is_valid_game():
     game = "3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green"
@@ -15,11 +15,8 @@ def test_is_valid_game_too_many_blue():
 
 def test_get_data():
     game_string = "Game 1: 3 blue, 4 red; 1 red, 2 green, 6 blue; 2 green"
-    assert get_game_data(game_string) == {
-        'number': 1,
-        'draws': [
-            {'blue':3, 'red':4},
-            {'blue':6, 'red':1, 'green':2},
-            {'green':2},
-        ]
+    assert get_required_cubes(game_string) == {
+        'red':4,
+        'green':2,
+        'blue':6,
     }
