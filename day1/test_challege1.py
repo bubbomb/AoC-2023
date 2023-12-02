@@ -29,3 +29,9 @@ def test_same_spelled_word_multiple_times():
 
 def test_multiple_spelled_words_harder():
     assert get_calibration_value('4nine9twooneeightwoz') == 42
+
+def test_upper_case():
+    assert get_calibration_value("NineTwo") == 92
+
+def test_digits_only():
+    assert get_calibration_value('three67four', digits_only=True) == 67
