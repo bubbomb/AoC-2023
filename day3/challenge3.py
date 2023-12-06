@@ -7,8 +7,7 @@ def get_line_sum(sum_line, next_line='', prev_line=''):
 
     while i < len(sum_line):
         if sum_line[i].isdigit():
-            
-            full_number, length_of_number = get_first_number_and_length(sum_line[i:])
+            full_number, length_of_number = get_first_int_and_its_length(sum_line[i:])
 
             if is_part(i, length_of_number, sum_line, prev_line, next_line):
                 total_value += full_number
@@ -34,23 +33,26 @@ def is_part(index, length_of_number, line, prev_line, next_line):
     return has_any_symbol(adjacent_prev_line + adjacent_sum_line + adjacent_next_line)
 
 
-def get_first_number_and_length(line):
+def get_first_int_and_its_length(line):
     match = re.search(r'\d+', line)
     return int(match.group()), match.end()
 
 def get_total_gear_ratio(sum_line, next_line='', prev_line=''):
     total_gear_ratio = 0
-    stars_indices = []
+    star_indices = get_all_star_indices(sum_line)
 
-    for match in re.finditer(r'[*]', sum_line):
-        stars_indices.append(match.start())
-
-    for star_index in stars_indices:
-        numbers = get_adjacent_numbers(star_index, prev_line, sum_line, next_line)
-        if len(numbers) == 2:
-            total_gear_ratio += numbers[0] * numbers[1]
+    for star_index in star_indices:
+        adjacent_numbers = get_adjacent_numbers(star_index, prev_line, sum_line, next_line)
+        if len(adjacent_numbers) == 2:
+            total_gear_ratio += adjacent_numbers[0] * adjacent_numbers[1]
 
     return total_gear_ratio
+
+def get_all_star_indices(line):
+    star_indices = []
+    for match in re.finditer(r'[*]', line):
+        star_indices.append(match.start())
+    return star_indices
 
 def get_adjacent_numbers(star_index, line1, line2, line3):
     adjacent_numbers = []
