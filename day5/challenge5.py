@@ -1,23 +1,52 @@
 import re
 import os
 
-def get_lowest_location(text):
+MAP_ORDER = [
+    'seed-to-soil map',
+    'soil-to-fertilizer map',
+    'fertilizer-to-water map',
+    'water-to-light map',
+    'light-to-temperature map',
+    'temperature-to-humidity map',
+    'humidity-to-location map',
+]
+def get_lowest_location_single_seed(text):
     data = extract_data(text)
-    ordered_maps = [
-        data['seed-to-soil map'],
-        data['soil-to-fertilizer map'],
-        data['fertilizer-to-water map'],
-        data['water-to-light map'],
-        data['light-to-temperature map'],
-        data['temperature-to-humidity map'],
-        data['humidity-to-location map'],
-    ]
     locations = []
+    ordered_maps = [data[map_name] for map_name in MAP_ORDER]
     for seed in data['seeds']:
         print('seed: ', seed)
         locations += [get_location_from_seed(seed, ordered_maps)]
 
     return min(locations)
+
+def get_lowest_location_seed_range(text):
+    data = extract_data(text)
+    ordered_maps = [data[map_name] for map_name in MAP_ORDER]
+
+    seed_ranges = []
+    for i, seed in enumerate(data['seeds']):
+        if i % 2 == 0:
+            seed_ranges += [
+                {'range_start': seed, 'range_length':data['seeds'][i+1]}
+            ]
+
+    lowest_location = None
+    for seed_range in seed_ranges:
+        print('seed_range: ', seed_range)
+        for i in range(seed_range['range_length']):
+            seed = seed_range['range_start'] + i
+            new_location = get_location_from_seed(seed, ordered_maps)
+            if not lowest_location:
+                lowest_location = new_location
+                print('lowest_location: ', lowest_location)
+                print('seed: ', seed)
+            elif new_location < lowest_location:
+                lowest_location = new_location
+                print('lowest_location: ', lowest_location)
+                print('seed: ', seed)
+
+    return lowest_location
 
 
 def extract_data(text):
@@ -69,6 +98,8 @@ if __name__ == "__main__":
     print()
 
     print('calculating puzzles...')
-    first_puzzle_value = get_lowest_location(text)
+    first_puzzle_value = get_lowest_location_single_seed(text)
+    second_puzzle_value = get_lowest_location_seed_range(text)
 
     print('first puzzle: ', first_puzzle_value)
+    print('second puzzle: ', second_puzzle_value)

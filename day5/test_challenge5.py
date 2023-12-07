@@ -1,4 +1,4 @@
-from challenge5 import get_lowest_location, extract_data, get_next_mapped_value
+from challenge5 import get_lowest_location_single_seed, extract_data, get_next_mapped_value, get_lowest_location_seed_range
 
 TEST_INPUT='''
 seeds: 79 14 55 13
@@ -45,7 +45,7 @@ seed-to-soil map:
 '''.strip()
 
 def test_big_input_challenge_1():
-    assert get_lowest_location(TEST_INPUT) == 35
+    assert get_lowest_location_single_seed(TEST_INPUT) == 35
 
 def test_extract_data():
     assert extract_data(SMALL_TEST_INPUT) == {
@@ -66,3 +66,6 @@ def test_get_next_mapped_value():
     assert get_next_mapped_value(14, map) == 14
     assert get_next_mapped_value(55, map) == 57
     assert get_next_mapped_value(13, map) == 13
+
+def test_big_input_challenge_2():
+    assert get_lowest_location_seed_range(TEST_INPUT) == 46
