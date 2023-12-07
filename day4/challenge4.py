@@ -78,8 +78,3 @@ if __name__ == "__main__":
     second_puzzle_value = multiply_scratchcards(lines)
     print('first puzzle: ', first_puzzle_value)
     print('second puzzle: ', second_puzzle_value)
-
-
-
-
-
