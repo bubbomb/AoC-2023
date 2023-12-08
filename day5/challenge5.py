@@ -61,6 +61,8 @@ def extract_data(text):
                 'destination_range_start': map_numbers[0],
                 'source_range_start': map_numbers[1],
                 'range_length': map_numbers[2],
+                'diff': map_numbers[0] - map_numbers[1],
+                'source_range_end': map_numbers[1] + map_numbers[2],
             }]
     return data
 
@@ -69,25 +71,72 @@ def get_numbers(line):
 
 def get_next_mapped_value(original_value, map):
     for range in map:
-        range_start = range['source_range_start']
-        range_end = range_start + range['range_length']
-        if range_start <= original_value <= range_end:
-            diff = range['destination_range_start'] - range_start
-            return original_value + diff
+        if range['source_range_start'] <= original_value <= range['source_range_end']:
+            return original_value + range['diff']
             
     return original_value
 
 def get_location_from_seed(seed, ordered_maps):
     next_value = seed
     for map in ordered_maps:
+        print(next_value, end=' --> ')
         next_value = get_next_mapped_value(next_value, map)
+    else:
+        print(next_value)
     return next_value 
+
+def get_prev_mapped_value(original_value, map):
+    for range in map[::-1]:
+        if range['destination_range_start'] <= original_value <= range['destination_range_start'] + range['range_length']:
+            return original_value - range['diff']
+    return original_value
+
+def get_seed_from_location(location, ordered_maps):
+    prev_value = location
+    for map in ordered_maps[::-1]:
+        # print(prev_value, end=' --> ')
+        prev_value = get_prev_mapped_value(prev_value, map)
+    # else:
+    #     print(prev_value)
+
+    return prev_value
+
+def reverse_lookup_lowest_location_seed_range(text):
+    data = extract_data(text)
+    ordered_maps = [data[map_name] for map_name in MAP_ORDER]
+
+    seed_ranges = []
+    for i, seed in enumerate(data['seeds']):
+        if i % 2 == 0:
+            seed_ranges += [
+                {'range_start': seed, 'range_length':data['seeds'][i+1]}
+            ]
+
+    lowest_location = 0
+    while True:
+        seed = get_seed_from_location(lowest_location, ordered_maps)
+
+        if seed_in_range(seed, seed_ranges):
+            break
+        lowest_location +=1
+        if lowest_location % 100000 == 0:
+            print(lowest_location)    
+        
+    return lowest_location
+
+def seed_in_range(seed, seed_ranges):
+
+    for seed_range in seed_ranges:
+        if seed_range['range_start'] <= seed <= seed_range['range_start'] + seed_range['range_length']:
+            return True
+
+    return False
 
 if __name__ == "__main__":
     print('--------------------------Start-----------------------------')
     print()
 
-    print('Reading file...')
+    print('Opening file...')
     file_path = os.path.dirname(__file__) + '/input.txt'
     print(file_path)
     print()
@@ -99,7 +148,7 @@ if __name__ == "__main__":
 
     print('calculating puzzles...')
     first_puzzle_value = get_lowest_location_single_seed(text)
-    second_puzzle_value = get_lowest_location_seed_range(text)
+    second_puzzle_value = reverse_lookup_lowest_location_seed_range(text)
 
     print('first puzzle: ', first_puzzle_value)
     print('second puzzle: ', second_puzzle_value)
