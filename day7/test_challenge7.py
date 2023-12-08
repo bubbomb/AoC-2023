@@ -17,8 +17,8 @@ def test_get_total_winnings():
 
 def test_rank_hand():
     assert rank_hand([3,3,3,3,3]) == FIVE_OF_A_KIND
-    assert rank_hand([3,3,3,1,3]) == FOUR_OF_A_KIND
-    assert rank_hand([3,3,3,1,2]) == THREE_OF_A_KIND
+    assert rank_hand([3,3,3,10,3]) == FOUR_OF_A_KIND
+    assert rank_hand([3,3,3,10,2]) == THREE_OF_A_KIND
     assert rank_hand([3,2,10,3,13]) == ONE_PAIR
     assert rank_hand([3,2,10,9,13]) == HIGH_CARD
     assert rank_hand([5,5,5,2,2]) == FULL_HOUSE
@@ -32,3 +32,8 @@ def test_get_total_winnings_with_jokers():
 def test_rank_hand_with_jokers():
     assert rank_hand([1,1,1,1,1]) == FIVE_OF_A_KIND
     assert rank_hand([2,2,2,2,1]) == FIVE_OF_A_KIND
+    assert rank_hand([2,2,2,13,1]) == FOUR_OF_A_KIND
+    assert rank_hand([2,2,13,13,1]) == FULL_HOUSE
+    assert rank_hand([2,2,13,1,1]) == FOUR_OF_A_KIND
+    assert rank_hand([2,5,13,1,1]) == THREE_OF_A_KIND
+    assert rank_hand([2,5,13,9,1]) == ONE_PAIR

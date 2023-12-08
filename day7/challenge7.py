@@ -39,25 +39,38 @@ def rank_hand(hand):
     for card in hand:
         card_counts[card] = card_counts.get(card, 0) + 1
 
+    joker_count = card_counts.get(1, 0)
+
+    if card_counts.get(1, False):
+        del card_counts[1]
+
     counts_of_same_card = list(card_counts.values())
     counts_of_same_card.sort(reverse=True)
 
-    if counts_of_same_card == [3,2]:
-        return FULL_HOUSE
-    if counts_of_same_card == [2,2,1]:
-        return TWO_PAIR
+    highest_count = joker_count
+    if counts_of_same_card:
+        highest_count += counts_of_same_card[0]
 
-    highest_count = counts_of_same_card[0]
     if highest_count == 5:
         return FIVE_OF_A_KIND
     if highest_count == 4:
         return FOUR_OF_A_KIND
+    if is_full_house(counts_of_same_card, joker_count):
+        return FULL_HOUSE
+    if counts_of_same_card == [2,2,1]:
+        return TWO_PAIR
     if highest_count == 3:
         return THREE_OF_A_KIND
     if highest_count == 2:
         return ONE_PAIR
-
     return HIGH_CARD
+
+def is_full_house(counts_of_same_card, jokers):
+    if counts_of_same_card == [3,2]:
+        return True
+    elif counts_of_same_card == [2,2] and jokers == 1:
+        return True
+    return False
 
 def extract_data(text, rank_map=CARD_RANK_MAP):
     lines = text.split('\n')
