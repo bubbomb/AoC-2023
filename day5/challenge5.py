@@ -24,12 +24,7 @@ def get_lowest_location_seed_range(text):
     data = extract_data(text)
     ordered_maps = [data[map_name] for map_name in MAP_ORDER]
 
-    seed_ranges = []
-    for i, seed in enumerate(data['seeds']):
-        if i % 2 == 0:
-            seed_ranges += [
-                {'range_start': seed, 'range_length':data['seeds'][i+1]}
-            ]
+    seed_ranges = get_seed_ranges(data['seeds'])
 
     lowest_location = None
     for seed_range in seed_ranges:
@@ -94,23 +89,24 @@ def get_prev_mapped_value(original_value, map):
 def get_seed_from_location(location, ordered_maps):
     prev_value = location
     for map in ordered_maps[::-1]:
-        # print(prev_value, end=' --> ')
         prev_value = get_prev_mapped_value(prev_value, map)
-    # else:
-    #     print(prev_value)
 
     return prev_value
+
+def get_seed_ranges(seeds):
+    seed_ranges = []
+    for i, seed in enumerate(seeds):
+        if i % 2 == 0:
+            seed_ranges += [
+                {'range_start': seed, 'range_length':seeds[i+1]}
+            ]
+    return seed_ranges
 
 def reverse_lookup_lowest_location_seed_range(text):
     data = extract_data(text)
     ordered_maps = [data[map_name] for map_name in MAP_ORDER]
 
-    seed_ranges = []
-    for i, seed in enumerate(data['seeds']):
-        if i % 2 == 0:
-            seed_ranges += [
-                {'range_start': seed, 'range_length':data['seeds'][i+1]}
-            ]
+    seed_ranges = get_seed_ranges(data['seeds'])
 
     lowest_location = 0
     while True:
