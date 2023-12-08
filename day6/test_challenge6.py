@@ -1,4 +1,4 @@
-from challenge6 import get_number_of_winning_strategies, get_first_winning_strategy
+from challenge6 import get_number_of_winning_strategies, get_first_winning_strategy, get_number_of_winning_strategies_long_race
 
 TEST_INPUT = """
 Time:      7  15   30
@@ -14,3 +14,6 @@ def test_get_first_winning_strategy():
     assert get_first_winning_strategy(7,9) == 2
     assert get_first_winning_strategy(15,40) == 4
     assert get_first_winning_strategy(30,200) == 11
+
+def test_challenge_1_from_input():
+    assert get_number_of_winning_strategies_long_race(TEST_INPUT) == 71503

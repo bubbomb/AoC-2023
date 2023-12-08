@@ -18,6 +18,12 @@ def get_times_and_distances(text):
     distances = [int(digit) for digit in re.findall(r'\d+', lines[1])]
     return times, distances
 
+def get_long_time_and_distance(text):
+    lines = text.split('\n')
+    time = re.search(r'\d+', lines[0].replace(" ", "")).group()
+    distance = re.search(r'\d+', lines[1].replace(" ", "")).group()
+    return int(time), int(distance)
+
 def get_first_winning_strategy(time_allowed, target_distance):
 
     for i in range(time_allowed):
@@ -26,6 +32,12 @@ def get_first_winning_strategy(time_allowed, target_distance):
         strategy_distance = time_left * hold_milliseconds
         if strategy_distance > target_distance:
             return hold_milliseconds
+
+def get_number_of_winning_strategies_long_race(text):
+    time, distance = get_long_time_and_distance(text)
+    first_winning_strategy = get_first_winning_strategy(time, distance)
+
+    return time - (2* first_winning_strategy) + 1
 
 if __name__ == "__main__":
     print('--------------------------Start-----------------------------')
@@ -43,7 +55,7 @@ if __name__ == "__main__":
 
     print('calculating puzzles...')
     first_puzzle_value = get_number_of_winning_strategies(text)
-    # second_puzzle_value = reverse_lookup_lowest_location_seed_range(text)
+    second_puzzle_value = get_number_of_winning_strategies_long_race(text)
 
     print('first puzzle: ', first_puzzle_value)
-    # print('second puzzle: ', second_puzzle_value)
+    print('second puzzle: ', second_puzzle_value)
